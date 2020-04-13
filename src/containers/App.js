@@ -1,6 +1,6 @@
 import React, {Component, useState, useEffect} from 'react';
 import './App.css';
-import Layout from '../components/Layout/Layout'
+import Layout from '../hoc/Layout/Layout'
 import BurguerBuilder from './BurguerBuilder/BurguerBuilder'
 
 class App extends Component{

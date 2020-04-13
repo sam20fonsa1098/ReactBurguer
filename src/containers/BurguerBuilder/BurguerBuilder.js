@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
-import Aux from '../../hoc/Aux'
+import Aux from '../../hoc/Aux/Aux'
 import Burguer from '../../components/Burguer/Burguer'
 import BuildControls from '../../components/Burguer/BuildControls/BuildControls'
+import Modal from '../../components/UI/Modal/Modal'
+import OrderSummary from '../../components/Burguer/OrderSummary/OrderSummary'
+
 
 const INGREDIENT_PRICES = {
     salad : 0.5,
@@ -21,9 +24,26 @@ class BurguerBuilder extends Component{
                 cheese: 0,
                 meat  : 0,
             },
-            totalPrice: 4,
-            purchasable: false
+            totalPrice  : 4,
+            purchasable : false,
+            purchasing  : false,
         }
+    }
+
+    purchasingHandler = () => {
+        this.setState({
+            purchasing: true
+        })
+    }
+
+    purchasingCancelHandler = () => {
+        this.setState({
+            purchasing: false
+        })
+    }
+
+    purchasingContinueHandler = () => {
+        alert('Congrats you continue');
     }
 
     updatePurchaseState = (ingredients) => {
@@ -74,13 +94,21 @@ class BurguerBuilder extends Component{
     
         return(
             <Aux>
+                <Modal show = {this.state.purchasing} modalClosed = {this.purchasingCancelHandler}>
+                    <OrderSummary ingredients        = {this.state.ingredients}
+                                  purchasingClosed   = {this.purchasingCancelHandler}
+                                  purchasingContinue = {this.purchasingContinueHandler}
+                                  price              = {this.state.totalPrice}>
+                    </OrderSummary>
+                </Modal>
                 <Burguer ingredients = {this.state.ingredients}></Burguer>
                 <BuildControls 
                     adding      = {this.addIngredientHandler} 
                     remove      = {this.removeIngredientHandler}
                     disabled    = {disabledInfo}
                     price       = {this.state.totalPrice}
-                    purchasable = {this.state.purchasable}>
+                    purchasable = {this.state.purchasable}
+                    purchasing  = {this.purchasingHandler}>
                 </BuildControls>
             </Aux>
         );
