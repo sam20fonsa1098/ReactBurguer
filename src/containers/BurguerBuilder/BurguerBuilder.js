@@ -22,17 +22,27 @@ class BurguerBuilder extends Component{
     constructor (props) {
         super (props);
         this.state = {
-            ingredients:{
-                salad : 0,
-                bacon : 0,
-                cheese: 0,
-                meat  : 0,
-            },
-            totalPrice  : 4,
-            purchasable : false,
+            ingredients : null,
+            totalPrice  : 5.3,
+            purchasable : true,
             purchasing  : false,
-            loading     : false
+            loading     : false,
+            error       : false
         }
+    }
+
+    componentDidMount () {
+        axiosOrders.get('/ingredients.json')
+            .then(response => {
+                this.setState({
+                    ingredients : response.data
+                })
+            })
+            .catch(error => {
+                this.setState({
+                    error : true
+                })
+            });
     }
 
     purchasingHandler = () => {
@@ -130,11 +140,32 @@ class BurguerBuilder extends Component{
             disabledInfo[key] = disabledInfo[key] <= 0
         }
 
-        let orderSummary = <OrderSummary ingredients        = {this.state.ingredients}
-                                purchasingClosed   = {this.purchasingCancelHandler}
-                                purchasingContinue = {this.purchasingContinueHandler}
-                                price              = {this.state.totalPrice}>
+        let orderSummary = null
+
+       
+
+        let burguer = this.state.error ? <p style ={{alignItems: 'center'}}>Ingredients can't be laoded</p> :<Spinner></Spinner>
+       
+        
+        if(this.state.ingredients) {
+            burguer = <Aux>
+                        <Burguer ingredients = {this.state.ingredients}></Burguer>
+                        <BuildControls 
+                            adding      = {this.addIngredientHandler} 
+                            remove      = {this.removeIngredientHandler}
+                            disabled    = {disabledInfo}
+                            price       = {this.state.totalPrice}
+                            purchasable = {this.state.purchasable}
+                            purchasing  = {this.purchasingHandler}>
+                        </BuildControls>
+                    </Aux>
+
+            orderSummary = <OrderSummary    ingredients        = {this.state.ingredients}
+                                            purchasingClosed   = {this.purchasingCancelHandler}
+                                            purchasingContinue = {this.purchasingContinueHandler}
+                                            price              = {this.state.totalPrice}>
                             </OrderSummary>
+        }
 
         if(this.state.loading) {
             orderSummary = <Spinner></Spinner>
@@ -145,15 +176,7 @@ class BurguerBuilder extends Component{
                 <Modal show = {this.state.purchasing} modalClosed = {this.purchasingCancelHandler}>
                     {orderSummary}
                 </Modal>
-                <Burguer ingredients = {this.state.ingredients}></Burguer>
-                <BuildControls 
-                    adding      = {this.addIngredientHandler} 
-                    remove      = {this.removeIngredientHandler}
-                    disabled    = {disabledInfo}
-                    price       = {this.state.totalPrice}
-                    purchasable = {this.state.purchasable}
-                    purchasing  = {this.purchasingHandler}>
-                </BuildControls>
+                {burguer}
             </Aux>
         );
     };

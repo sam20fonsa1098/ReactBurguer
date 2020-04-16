@@ -4,12 +4,12 @@ import Layout from '../hoc/Layout/Layout'
 import BurguerBuilder from './BurguerBuilder/BurguerBuilder'
 
 class App extends Component{
+
+
   render(){
     return(
       <Layout>
-        <BurguerBuilder>
-          
-        </BurguerBuilder>
+        <BurguerBuilder></BurguerBuilder>
       </Layout>
     );
   };
