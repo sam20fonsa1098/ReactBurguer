@@ -1,4 +1,6 @@
 import React from 'react'
+import {withRouter} from 'react-router-dom'
+
 import BurguerIngredient from './BurguerIngredient/BurguerIngredient'
 import classes from './Burguer.css'
 
@@ -18,7 +20,7 @@ const burguer = (props) => {
     }, []);
 
 
-    if(transformIngredients.length == 0){
+    if(transformIngredients.length === 0){
         transformIngredients = <p>Please starting adding ingredients</p>
     }
     return(
@@ -30,4 +32,4 @@ const burguer = (props) => {
     );
 };
 
-export default burguer;
+export default withRouter(burguer);
