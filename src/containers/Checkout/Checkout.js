@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Route} from 'react-router-dom'
+import {Route, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary'
@@ -16,24 +16,32 @@ class Ckeckout extends Component {
     }
 
     render () {
-        return(
-            <div style = {{width: '100%'}}>
-                <CheckoutSummary    
-                                checkoutCancelled = {this.checkoutCancelledHandler} 
-                                checkoutContinued = {this.checkoutContinuedHandler} 
-                                ingredients       = {this.props.ings}/>
-                <Route 
-                    path      = {this.props.match.url + '/contact-data'} 
-                    component = {ContactData}/>
-            </div>
+        console.log(this.props)
+        let summary = <Redirect to = "/"/>
+        if (this.props.ings) {
+            summary = <div>
+                        <CheckoutSummary    
+                            checkoutCancelled = {this.checkoutCancelledHandler} 
+                            checkoutContinued = {this.checkoutContinuedHandler} 
+                            ingredients       = {this.props.ings}/>
+                        <Route 
+                            path      = {this.props.match.url + '/contact-data'} 
+                            component = {ContactData}/>
+                    </div>
+            summary = this.props.purchased ? <Redirect to = "/"/> : summary;
+        }
+        return (
+            summary
         );
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        ings : state.ingredients
+        ings : state.burgerBuilder.ingredients,
+        purchased: state.order.purchased
     }
 }
+
 
 export default connect(mapStateToProps)(Ckeckout);
