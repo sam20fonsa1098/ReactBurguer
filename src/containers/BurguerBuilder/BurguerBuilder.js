@@ -14,7 +14,7 @@ import Spinner from '../../components/UI/Spinner/Spinner'
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler'
 
 
-class BurguerBuilder extends Component{
+export class BurguerBuilder extends Component{
 
     constructor (props) {
         super (props);
