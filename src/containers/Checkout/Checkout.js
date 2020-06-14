@@ -16,7 +16,6 @@ class Ckeckout extends Component {
     }
 
     render () {
-        console.log(this.props)
         let summary = <Redirect to = "/"/>
         if (this.props.ings) {
             summary = <div>
